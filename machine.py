@@ -13,12 +13,12 @@ import re
 def review_to_words( raw ):
     letters_only = re.sub("[^a-zA-Z]", " ", raw)
     #
-    # 3. Convert to lower case, split into individual words
+    # Convert to lower case, split into individual words
     words = letters_only.lower().split()
-    # 5. Remove stop words
+    # Remove stop words
     meaningful_words = [w for w in words if not w in stops]
     #
-    # 6. Join the words back into one string separated by space,
+    # Join the words back into one string separated by space,
     # and return the result.
     return( " ".join( meaningful_words ))
 
@@ -28,12 +28,11 @@ test = pd.read_csv("/home/atticus/Desktop/Machine/austest.csv", delimiter=",", h
 
 clean_pn = []
 
-# Loop over each review; create an index i that goes from 0 to the length
-# of the movie review list
+
 for item in train['ProductName']:
-    # Call our function for each one, and add the result to the list of
-    # clean reviews
+    # clean
     clean_pn.append( review_to_words( item))
+
 # bag of words tool.
 vectorizer = CountVectorizer(analyzer = "word",   \
                              tokenizer = None,    \
@@ -49,14 +48,13 @@ vectorizer = CountVectorizer(analyzer = "word",   \
 # array
 train_data_features = vectorizer.fit_transform(clean_pn).toarray()
 
-# Initialize a Random Forest classifier with 200 trees
+# Initialize a Random Forest classifier with n trees
 forest = RandomForestClassifier(n_estimators=500)
 forest = forest.fit( train_data_features, train['LC'])
 
 clean_pn_test = []
 for item in test['ProductName'].values:
-    # Call our function for each one, and add the result to the list of
-    # clean reviews
+    # clean
     clean_pn_test.append( review_to_words( item))
 clean_pn_test
 # Get a bag of words for the test set, and convert to a numpy array
